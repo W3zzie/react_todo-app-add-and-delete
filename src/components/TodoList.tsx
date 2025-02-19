@@ -1,5 +1,5 @@
 import { Todo } from '../types/Todo';
-import  TodoItem  from './TodoItem';
+import TodoItem from './TodoItem';
 
 type Props = {
   filteredTodos: Todo[];
