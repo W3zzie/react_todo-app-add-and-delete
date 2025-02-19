@@ -1,24 +1,31 @@
-import { Todo } from '../types/Todo';
-import classNames from 'classnames';
+/* eslint-disable jsx-a11y/label-has-associated-control */
+/* eslint-disable jsx-a11y/control-has-associated-label */
 
+// #region imports
+import cn from 'classnames';
+import { Todo } from '../types/Todo';
+// #endregion
+
+// #region type Props
 type Props = {
   todo: Todo;
-  isLoading: boolean;
   onDelete?: (todoId: number[]) => void;
+  isLoading: boolean;
 };
+// #endregion
 
-export const TodoItem: React.FC<Props> = ({ todo, isLoading, onDelete }) => {
+export default function TodoItem({
+  todo,
+  onDelete = () => {},
+  isLoading,
+}: Props) {
   return (
-    <div
-      data-cy="Todo"
-      className={classNames('todo', { completed: todo.completed })}
-    >
-      <label className="todo__status-label" htmlFor={`todoStatus-${todo.id}`}>
+    <div data-cy="Todo" className={cn('todo', { completed: todo.completed })}>
+      <label className="todo__status-label">
         <input
           data-cy="TodoStatus"
           type="checkbox"
           className="todo__status"
-          id={`todoStatus-${todo.id}`}
           defaultChecked={todo.completed}
         />
       </label>
@@ -27,20 +34,18 @@ export const TodoItem: React.FC<Props> = ({ todo, isLoading, onDelete }) => {
         {todo.title}
       </span>
 
-      {/* Remove button appears only on hover */}
       <button
         type="button"
         className="todo__remove"
         data-cy="TodoDelete"
-        onClick={() => onDelete && onDelete([todo.id])}
+        onClick={() => onDelete([todo.id])}
       >
         ×
       </button>
 
-      {/* overlay will cover the todo while it is being deleted or updated */}
       <div
         data-cy="TodoLoader"
-        className={classNames('modal overlay', {
+        className={cn('modal overlay', {
           'is-active': isLoading,
         })}
       >
@@ -49,4 +54,4 @@ export const TodoItem: React.FC<Props> = ({ todo, isLoading, onDelete }) => {
       </div>
     </div>
   );
-};
+}
