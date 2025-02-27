@@ -56,9 +56,9 @@ export const App: React.FC = () => {
   }
 
   function onDelete(todoIds: number[]) {
-    setLoadingTodoIds(todoIds);
+    setLoadingTodoIds(prevIds => [...prevIds, ...todoIds]);
 
-    todoIds.map(todoId =>
+    todoIds.forEach(todoId =>
       deleteTodos(todoId)
         .then(() =>
           setTodos(currentTodos =>
@@ -66,7 +66,9 @@ export const App: React.FC = () => {
           ),
         )
         .catch(() => setErrorMessage(ErrorStatus.DELETE_TODO))
-        .finally(() => setLoadingTodoIds([])),
+        .finally(() => {
+          setLoadingTodoIds(prevIds => prevIds.filter(id => id !== todoId));
+        })
     );
   }
 
