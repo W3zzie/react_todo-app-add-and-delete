@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 /* eslint-disable jsx-a11y/control-has-associated-label */
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { TodoStatus } from './types/TodoStatus';
 import { TodoHeader } from './components/TodoHeader';
 import { TodoList } from './components/TodoList';
@@ -25,16 +25,18 @@ export const App: React.FC = () => {
       .catch(() => setErrorMessage(ErrorStatus.LOAD_TODOS));
   }, []);
 
-  const filteredTodos = todos.filter(todo => {
-    switch (filter) {
-      case TodoStatus.active:
-        return !todo.completed;
-      case TodoStatus.completed:
-        return todo.completed;
-      default:
-        return true;
-    }
-  });
+  const filteredTodos = useMemo(() => {
+    return todos.filter(todo => {
+      switch (filter) {
+        case TodoStatus.active:
+          return !todo.completed;
+        case TodoStatus.completed:
+          return todo.completed;
+        default:
+          return true;
+      }
+    });
+  }, [todos, filter]);
 
   function onAdd({ title, userId, completed }: OmitTodo) {
     setIsLoading(true);
@@ -68,7 +70,7 @@ export const App: React.FC = () => {
         .catch(() => setErrorMessage(ErrorStatus.DELETE_TODO))
         .finally(() => {
           setLoadingTodoIds(prevIds => prevIds.filter(id => id !== todoId));
-        })
+        }),
     );
   }
 
